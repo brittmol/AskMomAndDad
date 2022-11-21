@@ -1,31 +1,33 @@
-'use strict';
-const faker = require('faker');
+"use strict";
+let options = {};
+if (process.env.NODE_ENV === "production") {
+  options.schema = process.env.SCHEMA; // define your schema in options object
+}
+const faker = require("faker");
 
 module.exports = {
   up: (queryInterface, Sequelize) => {
-
     function getRandomInt(min, max) {
       min = Math.ceil(min);
       max = Math.floor(max);
       return Math.floor(Math.random() * (max - min) + min);
     }
-    let answerArray = []
+    let answerArray = [];
     for (let i = 0; i < 250; i++) {
       answerArray.push({
         content: faker.lorem.sentence(),
         questionId: getRandomInt(1, 34),
         userId: getRandomInt(1, 8),
         createdAt: new Date(),
-        updatedAt: new Date()
-      })
+        updatedAt: new Date(),
+      });
     }
-    return queryInterface.bulkInsert('Answers', answerArray, {});
-
+    options.tableName = "Answers";
+    return queryInterface.bulkInsert(options, answerArray);
   },
 
   down: (queryInterface, Sequelize) => {
-
-    return queryInterface.bulkDelete('Answers', null, {});
-
-  }
+    options.tableName = "Answers";
+    return queryInterface.bulkDelete(options);
+  },
 };
